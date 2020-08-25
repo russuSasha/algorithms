@@ -1,4 +1,4 @@
-const isNumberPrime = require('./utils').isNumberPrime
+const isNumberPrime = require('../utils').isNumberPrime
 
 let prime = 2
 

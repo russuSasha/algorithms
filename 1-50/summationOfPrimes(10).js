@@ -1,4 +1,4 @@
-const isNumberPrime = require('./utils').isNumberPrime
+const isNumberPrime = require('../utils').isNumberPrime
 
 let sum = 5
 
