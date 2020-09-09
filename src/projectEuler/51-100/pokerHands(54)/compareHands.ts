@@ -1,12 +1,12 @@
-// High Card: Highest value card. 1
-// One Pair: Two cards of the same value. 2
-// Two Pairs: Two different pairs. 3
-// Three of a Kind: Three cards of the same value. 4
-// Straight: All cards are consecutive values. 5
-// Flush: All cards of the same suit. 6
-// Full House: Three of a kind and a pair. 7
-// Four of a Kind: Four cards of the same value. 8
-// Straight Flush: All cards are consecutive values of same suit. 9
+// High Card: Highest value card. 1  2-14
+// One Pair: Two cards of the same value. 2  40-280 (2*20-14*20)
+// Two Pairs: Two different pairs. 3  300-1620 ((2+3)*60-(13+14)*60)
+// Three of a Kind: Three cards of the same value. 4  1800-12600 (2*900-14*900)
+// Straight: All cards are consecutive values. 5  13000-91000 (2*6500-14*6500)
+// Flush: All cards of the same suit. 6  92000
+// Full House: Three of a kind and a pair. 7  100000-540000 (5*20000-27*20000) !!!
+// Four of a Kind: Four cards of the same value. 8  550000-3150000 (2*225000-14*225000)
+// Straight Flush: All cards are consecutive values of same suit. 9  3160000-22120000 (2*1580000-14*1580000)
 // Royal Flush: Ten, Jack, Queen, King, Ace, in same suit. 10
 
 // 2, 3, 4, 5, 6, 7, 8, 9, 10 => T, Jack => J, Queen => Q, King => K, Ace => A
@@ -14,18 +14,16 @@
 
 // '8C TS KC 9H 4S 7D 2S 5D 3S AC' // Right won
 
-export default function (hands: string) {
-  interface Card {
-    value: number
-    suit: string
-  }
+import Card from './CardInterface'
+import getHandPoints from './getHandPoints'
 
-  function getCardValue(card: string): number {
-    interface CardToValueMap {
+export default function (hands: string) {
+  function transformCard(card: string): Card {
+    interface ValueMap {
       [propName: string]: number
     }
 
-    const cardToValueMap: CardToValueMap = {
+    const valueMap: ValueMap = {
       T: 10,
       J: 11,
       Q: 12,
@@ -33,12 +31,8 @@ export default function (hands: string) {
       A: 14,
     }
 
-    return cardToValueMap[card] || +card
-  }
-
-  function transformCard(card: string): Card {
     return {
-      value: getCardValue(card[0]),
+      value: valueMap[card[0]] || +card[0],
       suit: card[1],
     }
   }
@@ -53,4 +47,6 @@ export default function (hands: string) {
   let rightHand: Card[] = array.slice(5).map(transformCard).sort(compareCards)
 
   console.log(leftHand, rightHand)
+
+  console.log(getHandPoints(leftHand), getHandPoints(rightHand))
 }
