@@ -1,5 +1,17 @@
-import compareHands from './compareHands'
+import fs from 'fs'
+import isFirstPlayerWon from './isFirstPlayerWon'
 
-const testHands: string = '8C TS KC 9H 4S 7D 2S 5D 3S AC' // Right won
+fs.promises.readFile('./poker.txt').then((data) => {
+  const firstPlayerWinsCount = data
+    .toString()
+    .split('\n')
+    .reduce((accumulator: number, item: string) => {
+      if (!item || !isFirstPlayerWon(item)) {
+        return accumulator
+      }
 
-compareHands(testHands)
+      return accumulator + 1
+    }, 0)
+
+  console.log(firstPlayerWinsCount)
+})

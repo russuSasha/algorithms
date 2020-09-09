@@ -12,12 +12,10 @@
 // 2, 3, 4, 5, 6, 7, 8, 9, 10 => T, Jack => J, Queen => Q, King => K, Ace => A
 // A K Q J T 9 8 7 6 5 4 3 2
 
-// '8C TS KC 9H 4S 7D 2S 5D 3S AC' // Right won
-
 import Card from './CardInterface'
 import getHandPoints from './getHandPoints'
 
-export default function (hands: string) {
+export default function (hands: string): boolean {
   function transformCard(card: string): Card {
     interface ValueMap {
       [propName: string]: number
@@ -46,7 +44,5 @@ export default function (hands: string) {
   let leftHand: Card[] = array.slice(0, 5).map(transformCard).sort(compareCards)
   let rightHand: Card[] = array.slice(5).map(transformCard).sort(compareCards)
 
-  console.log(leftHand, rightHand)
-
-  console.log(getHandPoints(leftHand), getHandPoints(rightHand))
+  return getHandPoints(leftHand) > getHandPoints(rightHand)
 }
