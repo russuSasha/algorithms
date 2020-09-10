@@ -15,34 +15,34 @@
 import Card from './CardInterface'
 import getHandPoints from './getHandPoints'
 
+function transformCard(card: string): Card {
+  interface ValueMap {
+    [propName: string]: number
+  }
+
+  const valueMap: ValueMap = {
+    T: 10,
+    J: 11,
+    Q: 12,
+    K: 13,
+    A: 14,
+  }
+
+  return {
+    value: valueMap[card[0]] || +card[0],
+    suit: card[1],
+  }
+}
+
+function compareCards(firstCard: Card, secondCard: Card): number {
+  return secondCard.value - firstCard.value
+}
+
 export default function (hands: string): boolean {
-  function transformCard(card: string): Card {
-    interface ValueMap {
-      [propName: string]: number
-    }
+  const handsArray: Card[] = hands.split(' ').map(transformCard)
 
-    const valueMap: ValueMap = {
-      T: 10,
-      J: 11,
-      Q: 12,
-      K: 13,
-      A: 14,
-    }
-
-    return {
-      value: valueMap[card[0]] || +card[0],
-      suit: card[1],
-    }
-  }
-
-  function compareCards(firstCard: Card, secondCard: Card): number {
-    return secondCard.value - firstCard.value
-  }
-
-  const array: string[] = hands.split(' ')
-
-  let leftHand: Card[] = array.slice(0, 5).map(transformCard).sort(compareCards)
-  let rightHand: Card[] = array.slice(5).map(transformCard).sort(compareCards)
+  let leftHand: Card[] = handsArray.slice(0, 5).sort(compareCards)
+  let rightHand: Card[] = handsArray.slice(5).sort(compareCards)
 
   return getHandPoints(leftHand) > getHandPoints(rightHand)
 }

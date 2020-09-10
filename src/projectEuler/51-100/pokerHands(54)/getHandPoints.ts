@@ -2,82 +2,86 @@ import Card from './CardInterface'
 import isStraightCheck from './isStraight'
 import isFlushCheck from './isFlush'
 
+type SameValueCards = Map<number, number>
+
 export default function (hand: Card[]): number {
-  let highestCard: number = 0
-  const sameValueCards = new Map()
+  const sameValueCards: SameValueCards = new Map()
+  let highestCardValue: number = 0
 
-  hand.forEach((item) => {
-    highestCard = Math.max(highestCard, item.value)
+  hand.forEach((item: Card) => {
+    const sameValueCard: number | undefined = sameValueCards.get(item.value)
 
-    if (sameValueCards.has(item.value)) {
-      sameValueCards.set(item.value, sameValueCards.get(item.value) + 1)
+    if (sameValueCard) {
+      sameValueCards.set(item.value, sameValueCard + 1)
     } else {
       sameValueCards.set(item.value, 1)
     }
+
+    highestCardValue = Math.max(highestCardValue, item.value)
   })
 
   const isStraight: boolean = isStraightCheck(hand)
   const isFlush: boolean = isFlushCheck(hand)
 
   if (isStraight && isFlush) {
-    return highestCard * 1.58e6
+    return highestCardValue * 1.58e6
   }
 
-  let fourOfKind: number = 0
-  let threeOfKind: number = 0
-  let onePair: number = 0
-  let twoPairs: number = 0
+  let fourOfKindValue: number = 0
+  let threeOfKindValue: number = 0
+  let onePairValue: number = 0
+  let twoPairsValue: number = 0
 
-  for (const [key, value] of sameValueCards) {
-    if (value === 4) {
-      fourOfKind = +key
+  for (const [cardValue, cardsCount] of sameValueCards) {
+    if (cardsCount === 4) {
+      fourOfKindValue = cardValue
 
       break
     }
 
-    if (value === 3) {
-      threeOfKind = +key
+    if (cardsCount === 3) {
+      threeOfKindValue = cardValue
     }
 
-    if (value === 2 && onePair) {
-      twoPairs = onePair + +key
-      onePair = 0
+    if (cardsCount === 2 && onePairValue > 0) {
+      twoPairsValue = onePairValue + cardValue
+      onePairValue = 0
 
       break
     }
 
-    if (value === 2) {
-      onePair = +key
+    if (cardsCount === 2) {
+      onePairValue = cardValue
     }
   }
 
-  if (fourOfKind) {
-    return fourOfKind * 225e3 + highestCard
+  if (fourOfKindValue) {
+    return fourOfKindValue * 225e3 + highestCardValue
   }
 
-  if (threeOfKind && onePair) {
-    return (threeOfKind + onePair) * 20e3 + highestCard
+  if (threeOfKindValue && onePairValue) {
+    return (threeOfKindValue + onePairValue) * 20e3 + highestCardValue
   }
 
   if (isFlush) {
-    return 92e3 + highestCard
+    return 92e3 + highestCardValue
   }
 
   if (isStraight) {
-    return highestCard * 6500
+    return highestCardValue * 6500
   }
 
-  if (threeOfKind) {
-    return threeOfKind * 900 + highestCard
+  if (threeOfKindValue) {
+    return threeOfKindValue * 900 + highestCardValue
   }
 
-  if (twoPairs) {
-    return twoPairs * 60 + highestCard
+  if (twoPairsValue) {
+    return twoPairsValue * 60 + highestCardValue
   }
 
-  if (onePair) {
-    return onePair * 20 + highestCard
+  if (onePairValue) {
+    return onePairValue * 20 + highestCardValue
   }
 
-  return highestCard
+  return highestCardValue
 }

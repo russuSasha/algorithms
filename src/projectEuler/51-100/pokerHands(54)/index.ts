@@ -1,8 +1,8 @@
 import fs from 'fs'
 import isFirstPlayerWon from './isFirstPlayerWon'
 
-fs.promises.readFile('./poker.txt').then((data) => {
-  const firstPlayerWinsCount = data
+fs.promises.readFile('./poker.txt').then((data: Buffer) => {
+  const firstPlayerWinsCount: number = data
     .toString()
     .split('\n')
     .reduce((accumulator: number, item: string) => {
