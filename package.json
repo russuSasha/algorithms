@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/russuSasha/algorithms#readme",
   "devDependencies": {
-    "@types/node": "14.14.37",
+    "@types/node": "14.17.3",
     "@typescript-eslint/eslint-plugin": "4.21.0",
     "@typescript-eslint/parser": "4.21.0",
     "eslint": "7.24.0",
